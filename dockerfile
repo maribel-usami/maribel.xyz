@@ -1,17 +1,14 @@
-# 使用 Hugo 官方镜像作为基础镜像
-FROM klakegg/hugo:ext-alpine
+# 使用官方的 NGINX 镜像
+FROM nginx:latest
 
 # 设置工作目录
-WORKDIR /app
+WORKDIR /usr/share/nginx/html
 
-# 将 Hugo 网站文件复制到容器内
-COPY . .
+# 复制静态文件
+COPY ./public/ .
 
-# 构建 Hugo 网站（如果你没有事先在本地构建）
-RUN hugo --minify
+# 复制 NGINX 配置文件（如果有自定义配置）
+COPY ./nginx.conf /etc/nginx/nginx.conf
 
 # 暴露 80 端口
 EXPOSE 80
-
-# 启动静态网站
-CMD ["hugo", "server", "--bind", "0.0.0.0", "--port", "80"]
